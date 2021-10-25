@@ -1,0 +1,89 @@
+//import { readRequestBody } from '../util/request-body.js'
+//import { setupJsonHeader } from '../util/setup-header.js'
+
+const { v1: uuidv1 } = require('uuid');
+
+
+const DEBUG = true
+
+const defaultData = {
+    requesterId: "123",
+    heartbeat: "I am still here."
+};
+
+const errorMessage = {
+  status: 400,
+  statusMessage: "Malfomred JSON in request."
+}
+
+const setCache = (key, data) => HEARTBEAT.put(key, data)
+//const getCache = key => HEARTBEAT.get(key);
+
+/*
+function consentKeyFromId(consentId) {
+    return `cookie-consent-${consentId}`;
+};
+ */
+
+export async function storeHeartbeatMessage(request) {
+  //console.log("storeHeartbeatMessage(): " + JSON.stringify(request));
+
+  let consentStoreResult;
+
+  try {
+      if (isJsonValid(request)) {
+        // Store updated data
+        let generatedUuid = generateUuid()
+        await setCache(generatedUuid, defaultData);
+        console.log("UUID: " + generatedUuid);
+        //console.log("We should now have loaded some data into our KV\n" + JSON.stringify(cookieConsent));
+
+
+//        let headers = (await setupJsonHeader()).headers
+
+        //consentStoreResult = new Response('', { status: 200, headers })
+        consentStoreResult = new Response('', { status: 200})
+      }
+  } catch (e) {
+    if (DEBUG) {
+      consentStoreResult = new Response(e.message || e.toString(), { status: 500 });
+    }
+    consentStoreResult = new Response(e, { status: 500 });
+  } finally {
+    return consentStoreResult;
+  }
+}
+
+
+/*
+async function getCookieConsent(consentId) {
+  let cookieConsentKey = consentKeyFromId(consentId);
+  let data;
+  const cache = await getCache(cookieConsentKey)
+  if (!cache) {
+    await setCache(cookieConsentKey, JSON.stringify(defaultData))
+    data = defaultData
+  } else {
+    data = JSON.parse(cache)
+  }
+  return data;
+}
+*/
+
+function generateUuid() {
+  let uuidDataStructure = {
+    uuid: ""
+  }
+  uuidDataStructure.uuid = uuidv1();
+  return uuidDataStructure;
+}
+
+function isJsonValid(json) {
+  let valid = false
+  if (json != null) {
+    /*if (json.requesterId.length > 0) {
+      valid = true;
+    } */
+  }
+  return valid
+}
