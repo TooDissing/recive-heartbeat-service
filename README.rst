@@ -1,5 +1,5 @@
 ================
-Hearbeat Service
+Heartbeat Service
 ================
 
 Simple RESTful HTTP API that can receive heartbeat events from various input sources.
